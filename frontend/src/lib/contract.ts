@@ -1,7 +1,7 @@
-export const CONTRACT_ADDRESS = "0x78453898e11153bdb7290F4B434D519c8b938304";
+export const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS || "0x78453898e11153bdb7290F4B434D519c8b938304";
 
 export const BASE_SEPOLIA_CHAIN_ID = "0x14a34"; // 84532
-export const BASE_SEPOLIA_RPC = "https://sepolia.base.org";
+export const BASE_SEPOLIA_RPC = import.meta.env.VITE_BASE_SEPOLIA_RPC || "https://sepolia.base.org";
 
 export const CONTRACT_ABI = [
   "function placeBet(string tokenAddress, uint256 duration, string snapshotPrice, string snapshotLiquidity) payable",
