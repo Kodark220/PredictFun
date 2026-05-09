@@ -1,0 +1,18 @@
+{
+  "name": "memesurvivor-evm",
+  "version": "1.0.0",
+  "description": "MemeSurvivor EVM betting contract for Base Sepolia",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "test": "npx hardhat test",
+    "deploy:sepolia": "npx hardhat run scripts/deploy.js --network baseSepolia"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^5.1.0",
+    "hardhat": "^2.22.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
+  }
+}
