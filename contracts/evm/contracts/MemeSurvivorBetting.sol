@@ -52,6 +52,7 @@ contract MemeSurvivorBetting is ReentrancyGuard, Ownable, IGenLayerBridgeReceive
     address public resolver;     // Authorized GenLayer bridge/relayer address
     IBridgeSender public bridgeSender;
     address public genLayerTargetContract;
+    uint256 public totalActiveLiability;
 
     mapping(uint256 => Bet) public bets;
     mapping(address => uint256[]) public userBets;
@@ -185,6 +186,7 @@ contract MemeSurvivorBetting is ReentrancyGuard, Ownable, IGenLayerBridgeReceive
 
         userBets[msg.sender].push(betId);
         allBetIds.push(betId);
+        totalActiveLiability += betAmount * PAYOUT_MULTIPLIER;
 
         emit BetPlaced(
             betId,
@@ -216,6 +218,7 @@ contract MemeSurvivorBetting is ReentrancyGuard, Ownable, IGenLayerBridgeReceive
         if (block.timestamp < bet.expiresAt) revert BetNotExpired();
 
         bet.survived = _survived;
+        totalActiveLiability -= bet.amount * PAYOUT_MULTIPLIER;
         uint256 payout = 0;
 
         if (_survived) {
@@ -244,6 +247,7 @@ contract MemeSurvivorBetting is ReentrancyGuard, Ownable, IGenLayerBridgeReceive
         if (msg.sender != bet.bettor) revert NotBettor();
 
         bet.status = BetStatus.Cancelled;
+        totalActiveLiability -= bet.amount * PAYOUT_MULTIPLIER;
         uint256 refund = (bet.amount * 90) / 100; // 90% refund
 
         (bool success, ) = payable(bet.bettor).call{value: refund}("");
@@ -317,13 +321,7 @@ contract MemeSurvivorBetting is ReentrancyGuard, Ownable, IGenLayerBridgeReceive
     // ─── Internal ────────────────────────────────────────────────────────
 
     function _calculateActiveLiability() internal view returns (uint256) {
-        uint256 liability = 0;
-        for (uint256 i = 0; i < nextBetId; i++) {
-            if (bets[i].status == BetStatus.Active) {
-                liability += bets[i].amount * PAYOUT_MULTIPLIER;
-            }
-        }
-        return liability;
+        return totalActiveLiability;
     }
 
     receive() external payable {}
