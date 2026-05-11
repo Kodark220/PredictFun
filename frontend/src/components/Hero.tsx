@@ -3,10 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Crosshair, ArrowRight, Rocket, Skull, Brain } from "lucide-react";
 
-const floatAnim = (delay: number) => ({
-  y: [0, -14, 0],
-  transition: { duration: 6, repeat: Infinity, ease: "easeInOut", delay },
-});
+const floatAnim = (delay: number) =>
+  ({
+    y: [0, -14, 0],
+    transition: { duration: 6, repeat: Infinity, ease: "easeInOut", delay },
+  } as any);
 
 interface HeroProps {
   totalBets: number;
